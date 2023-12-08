@@ -28,7 +28,7 @@ def get_hand_value(hand):
         return FULL_HOUSE
     elif 3 in c.values():
         return THREE_OF_A_KIND
-    elif 2 in Counter([x for x in c.values() if x == 2]).values():
+    elif len([x for x in c.values() if x == 2]) == 2:
         return TWO_PAIR
     elif 2 in c.values():
         return ONE_PAIR
