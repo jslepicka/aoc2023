@@ -83,34 +83,35 @@ def part2(sketch):
     #draw_sketch(sketch)
     new_sketch = {}
 
-    #expand the sketch adding ' ' if space in between coordinates is passable, 'X' if not
-    # S------7     SX-X-X-X-X-X-X7
-    # |F----7|     X             X
-    # ||    ||     | FX-X-X-X-X7 |
-    # ||    || --> X X         X X
+    #expand the sketch adding ' ' if space in between coordinates is passable, '-' or '|' if not
+    # S------7     S-------------7
+    # |F----7|     |             |
+    # ||    ||     | F---------7 |
+    # ||    || --> | |         | |
     # |L-7F-J|     | |         | |
-    # |  ||  |     X X         X X
+    # |  ||  |     | |         | |
     # L--JL--J     | |         | |
-    #              X X         X X
-    #              | LX-X7 FX-XJ |
-    #              X     X X     X
+    #              | |         | |
+    #              | L---7 F---J |
     #              |     | |     |
-    #              X     X X     X
-    #              LX-X-XJ LX-X-XJ
+    #              |     | |     |
+    #              |     | |     |
+    #              L-----J L-----J
             
     for coord in sketch:
         new_pos = (coord[0] * 2, coord[1] * 2)
         new_sketch[new_pos] = sketch[coord]
         right = (coord[0] + 1, coord[1])
         if sketch[coord] in 'S-LF' and (right in sketch and sketch[right] in 'S-J7'):
-            new_sketch[(new_pos[0] + 1, new_pos[1])] = 'X'
+            new_sketch[(new_pos[0] + 1, new_pos[1])] = '-'
         else:
             new_sketch[(new_pos[0] + 1, new_pos[1])] = ' '
         down = (coord[0], coord[1] + 1)
         if sketch[coord] in 'S|7F' and (down in sketch and sketch[down] in 'S|LJ'):
-            new_sketch[(new_pos[0], new_pos[1] + 1)] = 'X'
+            new_sketch[(new_pos[0], new_pos[1] + 1)] = '|'
         else:
             new_sketch[(new_pos[0], new_pos[1] + 1)] = ' '
+    #draw_sketch(new_sketch)
     
     #fill in all of the missing coordinates with ' '
     max_x = max(new_sketch, key=lambda x:x[0])[0]
@@ -122,19 +123,19 @@ def part2(sketch):
 
     #add an empty border around the new sketch
     # .................
-    # .SX-X-X-X-X-X-X7.
-    # .X             X.
-    # .| FX-X-X-X-X7 |.
-    # .X X         X X.
+    # .S-------------7.
+    # .|             |.
+    # .| F---------7 |.
     # .| |         | |.
-    # .X X         X X.
     # .| |         | |.
-    # .X X         X X.
-    # .| LX-X7 FX-XJ |.
-    # .X     X X     X.
+    # .| |         | |.
+    # .| |         | |.
+    # .| |         | |.
+    # .| L---7 F---J |.
     # .|     | |     |.
-    # .X     X X     X.
-    # .LX-X-XJ LX-X-XJ.
+    # .|     | |     |.
+    # .|     | |     |.
+    # .L-----J L-----J.
     # .................
 
     for x in range(max_x + 1):
@@ -147,19 +148,19 @@ def part2(sketch):
 
     #flood fill from the upper left corner, replacing reachable spots with 'O'
     # OOOOOOOOOOOOOOOOO
-    # OSX-X-X-X-X-X-X7O
-    # OX             XO
-    # O| FX-X-X-X-X7 |O
-    # OX XOOOOOOOOOX XO
+    # OS-------------7O
+    # O|             |O
+    # O| F---------7 |O
     # O| |OOOOOOOOO| |O
-    # OX XOOOOOOOOOX XO
     # O| |OOOOOOOOO| |O
-    # OX XOOOOOOOOOX XO
-    # O| LX-X7OFX-XJ |O
-    # OX     XOX     XO
+    # O| |OOOOOOOOO| |O
+    # O| |OOOOOOOOO| |O
+    # O| |OOOOOOOOO| |O
+    # O| L---7OF---J |O
     # O|     |O|     |O
-    # OX     XOX     XO
-    # OLX-X-XJOLX-X-XJO
+    # O|     |O|     |O
+    # O|     |O|     |O
+    # OL-----JOL-----JO
     # OOOOOOOOOOOOOOOOO
     dfs(new_sketch, (-1, -1))
     #draw_sketch(new_sketch)
