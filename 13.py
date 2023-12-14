@@ -33,49 +33,28 @@ def main():
     with open(day + ".txt") as file:
         input = [x.strip() for x in file.readlines()]
 
-    patterns = []
-    pattern = {}
-
-    y = 0
-    for line in input:
-        x = 0
-        if line == '':
-            y = 0
-            patterns.append(pattern)
-            pattern = {}
-        else:
-            for x, v in enumerate(line):
-                pattern[(x, y)] = v
-            y += 1
-    if len(pattern) > 0:
-        patterns.append(pattern)
+    def get_cols(rows):
+        cols = []
+        for x, _ in enumerate(rows[0]):
+            v = ""
+            for y, _ in enumerate(rows):
+                v += rows[y][x]
+            cols.append(v)
+        return cols
 
     rc = []
-
-    for p in patterns:
-        cols = []
-        rows = []
-        pattern_width = max(p, key=lambda x:x[0])[0]
-        pattern_height = max(p, key=lambda x:x[1])[1]
-        
-        for y in range(0, pattern_height+1):
-            row = 0
-            for x in range(0, pattern_width+1):
-                row <<= 1
-                if p[(x,y)] == '#':
-                    row |= 1
-            #print(bin(row))
-            rows.append(row)
-
-        for x in range(0, pattern_width + 1):
-            col = 0
-            for y in range(0, pattern_height + 1):
-                col <<= 1
-                if p[(x,y)] == '#':
-                    col |= 1
-            #print(bin(col))
-            cols.append(col)
-        rc.append({'cols': cols, 'rows': rows})
+    rows = []
+    input_len = len(input)
+    for i, line in enumerate(input):
+        if line == '' or i == input_len - 1:
+            if len(rows) > 0:
+                r = [int(x, 2) for x in rows]
+                c = [int(x, 2) for x in get_cols(rows)]
+                rc.append({'rows': r, 'cols': c})
+            rows = []
+        else:
+            n = line.replace('#', '1').replace('.', '0')
+            rows.append(n)
 
     print("Part 1: " + str(part1(rc)))
     print("Part 2: " + str(part1(rc, True)))
