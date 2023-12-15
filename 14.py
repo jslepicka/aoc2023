@@ -16,11 +16,6 @@ def draw_sketch(s):
 def tilt_dish(dish, tilt_dir):
     #draw_sketch(dish)
     #print()
-    new_dish = dish.copy()
-    for k, v in new_dish.items():
-        if v == 'O':
-            new_dish[k] = '.'
-    #draw_sketch(new_dish)
     max_x = max(dish, key=lambda x:x[0])[0]
     max_y = max(dish, key=lambda x:x[1])[1]
 
@@ -40,22 +35,29 @@ def tilt_dish(dish, tilt_dir):
     if tilt_dir == 's' or tilt_dir == 'e':
         reverse = 1
 
-    for d1 in range(maxs[0 ^ xor] + 1):
-        for d2 in range(maxs[1 ^ xor] + 1):
-            dirs = [d1, d2]
-            dirs = [dirs[0 ^ xor], dirs[1 ^ xor]]
+    zero_xor = 0 ^ xor
+    one_xor = 1 ^ xor
+
+    for d1 in range(maxs[zero_xor] + 1):
+        for d2 in range(maxs[one_xor] + 1):
+            coord = [d1, d2]
+            coord = [coord[zero_xor], coord[one_xor]]
             if reverse:
-                dirs[1 ^ xor] = maxs[1 ^ xor] - dirs[1 ^ xor]
-            dirs = tuple(dirs)
-            v = dish[dirs]
+                coord[one_xor] = maxs[one_xor] - coord[one_xor]
+            coord = tuple(coord)
+            v = dish[coord]
             if v == 'O':
-                coord = dirs
-                prev_coord = coord
-                while coord in new_dish and new_dish[coord] == '.':
-                    prev_coord = coord
-                    coord = (coord[0] + tilt_dirs[tilt_dir][0], coord[1] + tilt_dirs[tilt_dir][1])
-                new_dish[prev_coord] = 'O'
-    return new_dish
+                orig_coord = coord
+                new_coord = coord
+                while True:
+                    next_coord = (new_coord[0] + tilt_dirs[tilt_dir][0], new_coord[1] + tilt_dirs[tilt_dir][1])
+                    if next_coord not in dish or dish[next_coord] != '.':
+                        break
+                    new_coord = next_coord
+                dish[new_coord] = 'O'
+                if orig_coord != new_coord:
+                    dish[orig_coord] = '.'
+    return dish
 
 def calc_load(dish):
     load = 0
