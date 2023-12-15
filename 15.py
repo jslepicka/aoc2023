@@ -19,8 +19,6 @@ class Lens:
     def __init__(self, label, focal_length):
         self.label = label
         self.focal_length = focal_length
-    def __str__(self):
-        return self.label
 
 def part2(input):
     boxes = {key: [] for key in range(256)}
@@ -29,14 +27,14 @@ def part2(input):
         box_number = get_hash(label)
         if op == '-':
             for x, lens in enumerate(boxes[box_number]):
-                if str(lens) == label:
+                if lens.label == label:
                     del boxes[box_number][x]
                     break
         elif op == '=':
             new_lens = Lens(label, int(focal_length))
             replaced_lens = False
             for x, lens in enumerate(boxes[box_number]):
-                if str(lens) == label:
+                if lens.label == label:
                     boxes[box_number][x] = new_lens
                     replaced_lens = True
                     break
