@@ -45,8 +45,7 @@ def tilt_dish(dish, tilt_dir):
             if reverse:
                 coord[one_xor] = maxs[one_xor] - coord[one_xor]
             coord = tuple(coord)
-            v = dish[coord]
-            if v == 'O':
+            if dish[coord] == 'O':
                 orig_coord = coord
                 new_coord = coord
                 while True:
@@ -54,8 +53,8 @@ def tilt_dish(dish, tilt_dir):
                     if next_coord not in dish or dish[next_coord] != '.':
                         break
                     new_coord = next_coord
-                dish[new_coord] = 'O'
                 if orig_coord != new_coord:
+                    dish[new_coord] = 'O'
                     dish[orig_coord] = '.'
     return dish
 
